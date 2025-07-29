@@ -1,0 +1,21 @@
+{
+  "name": "Eugene Store",
+  "short_name": "Eugene Store",
+  "description": "Votre boutique en ligne de confiance au Cameroun",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#dc2626",
+  "icons": [
+    {
+      "src": "/logo eugene store.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo eugene store.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+} 
