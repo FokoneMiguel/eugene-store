@@ -29,88 +29,61 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
     try {
       if (isLogin) {
-        // Simulation de connexion
-        if (formData.email === 'admin@eugenestore.cm' && formData.password === 'password') {
-          const adminUser = {
-            id: 'admin-1',
-            email: 'admin@eugenestore.cm',
-            firstName: 'Admin',
-            lastName: 'Eugene Store',
-            role: 'admin' as const,
-            addresses: [],
-            orders: [],
-            createdAt: new Date().toISOString()
-          };
-          
-          // Simuler un token JWT
-          const token = btoa(JSON.stringify({ 
-            id: adminUser.id, 
-            email: adminUser.email, 
-            role: adminUser.role,
-            exp: Date.now() + 24 * 60 * 60 * 1000 // 24h
-          }));
-          
-          localStorage.setItem('token', token);
-          dispatch({ type: 'SET_USER', payload: adminUser });
-          onClose();
-        } else if (formData.email && formData.password) {
-          const user = {
-            id: 'user-1',
+        // Connexion avec l'API MongoDB
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
             email: formData.email,
-            firstName: 'Client',
-            lastName: 'Eugene Store',
-            role: 'customer' as const,
-            addresses: [],
-            orders: [],
-            createdAt: new Date().toISOString()
-          };
-          
-          const token = btoa(JSON.stringify({ 
-            id: user.id, 
-            email: user.email, 
-            role: user.role,
-            exp: Date.now() + 24 * 60 * 60 * 1000
-          }));
-          
-          localStorage.setItem('token', token);
-          dispatch({ type: 'SET_USER', payload: user });
+            password: formData.password
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          localStorage.setItem('token', data.token);
+          dispatch({ type: 'SET_USER', payload: data.user });
           onClose();
         } else {
-          alert('Email ou mot de passe incorrect');
+          alert(data.error || 'Email ou mot de passe incorrect');
         }
       } else {
-        // Simulation d'inscription
+        // Inscription avec l'API MongoDB
         if (formData.password !== formData.confirmPassword) {
           alert('Les mots de passe ne correspondent pas');
           return;
         }
-        
-        const newUser = {
-          id: `user-${Date.now()}`,
-          email: formData.email,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          phone: formData.phone,
-          role: 'customer' as const,
-          addresses: [],
-          orders: [],
-          createdAt: new Date().toISOString()
-        };
-        
-        const token = btoa(JSON.stringify({ 
-          id: newUser.id, 
-          email: newUser.email, 
-          role: newUser.role,
-          exp: Date.now() + 24 * 60 * 60 * 1000
-        }));
-        
-        localStorage.setItem('token', token);
-        dispatch({ type: 'SET_USER', payload: newUser });
-        onClose();
+
+        const response = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            phone: formData.phone
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          localStorage.setItem('token', data.token);
+          dispatch({ type: 'SET_USER', payload: data.user });
+          onClose();
+        } else {
+          alert(data.error || 'Erreur lors de l\'inscription');
+        }
       }
     } catch (error) {
       console.error('Erreur d\'authentification:', error);
-      alert('Une erreur est survenue');
+      alert('Une erreur est survenue. Vérifiez votre connexion internet.');
     } finally {
       setIsLoading(false);
     }

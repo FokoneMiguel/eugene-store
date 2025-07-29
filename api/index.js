@@ -212,6 +212,14 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
+// Route pour vérifier le token
+app.get('/api/auth/verify', authenticateToken, (req, res) => {
+  res.json({ 
+    user: req.user,
+    message: 'Token valide'
+  });
+});
+
 // Payment routes
 app.post('/api/payments/mtn', authenticateToken, (req, res) => {
   try {

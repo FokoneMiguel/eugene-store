@@ -62,25 +62,22 @@ const AppContent: React.FC = () => {
 
   const verifyToken = async (token: string) => {
     try {
-      // Ici vous pourriez vérifier le token avec votre API
-      // Pour l'instant, on simule juste
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      if (payload.exp * 1000 > Date.now()) {
-        // Token valide, récupérer les infos utilisateur
-        const mockUser = {
-          id: payload.id,
-          email: payload.email,
-          firstName: 'Eugene',
-          lastName: 'Store User',
-          role: payload.role || 'customer',
-          addresses: [],
-          orders: []
-        };
-        dispatch({ type: 'SET_USER', payload: mockUser });
+      // Vérifier le token avec l'API
+      const response = await fetch('/api/auth/verify', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        dispatch({ type: 'SET_USER', payload: userData.user });
       } else {
         localStorage.removeItem('token');
       }
     } catch (error) {
+      console.error('Erreur lors de la vérification du token:', error);
       localStorage.removeItem('token');
     }
   };
