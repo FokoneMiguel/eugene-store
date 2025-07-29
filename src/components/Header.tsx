@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Search, ShoppingCart, User, Menu, X } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import ThemeSelector from './ThemeSelector';
 
 interface HeaderProps {
   onCartClick: () => void;
@@ -101,13 +102,54 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onAuthClick }) => {
             </div>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 text-gray-600 hover:text-red-600"
-          >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          {/* Mobile Navigation */}
+          <div className="md:hidden flex items-center space-x-3">
+            {/* Mobile Cart */}
+            <button
+              onClick={onCartClick}
+              className="relative p-2 text-gray-600 hover:text-red-600 transition-colors"
+            >
+              <ShoppingCart className="h-6 w-6" />
+              {cartItemsCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {cartItemsCount}
+                </span>
+              )}
+            </button>
+
+            {/* Mobile Auth Button */}
+            {state.user ? (
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-gray-700 font-medium">
+                  {state.user.firstName}
+                </span>
+                <button
+                  onClick={handleLogout}
+                  className="text-sm text-red-600 hover:text-red-700 font-medium"
+                >
+                  Déco
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={onAuthClick}
+                className="auth-button-mobile bg-red-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-700 transition-colors text-sm"
+              >
+                Connexion
+              </button>
+            )}
+
+            {/* Theme Selector */}
+            <ThemeSelector />
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="p-2 text-gray-600 hover:text-red-600"
+            >
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Search */}

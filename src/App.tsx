@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
+import { ThemeProvider } from './context/ThemeContext';
 import Header from './components/Header';
 import CategoryFilter from './components/CategoryFilter';
 import ProductGrid from './components/ProductGrid';
@@ -10,6 +11,7 @@ import AdminDashboard from './components/AdminDashboard';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import PaymentModal from './components/PaymentModal';
 import Footer from './components/Footer';
+import HeroSection from './components/HeroSection';
 import { Product } from './types';
 
 const AppContent: React.FC = () => {
@@ -142,9 +144,12 @@ const AppContent: React.FC = () => {
         </div>
       )}
       
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <CategoryFilter />
-        <ProductGrid onProductClick={handleProductClick} />
+      <main>
+        <HeroSection />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <CategoryFilter />
+          <ProductGrid onProductClick={handleProductClick} />
+        </div>
       </main>
 
       <Footer />
@@ -181,9 +186,11 @@ const AppContent: React.FC = () => {
 
 function App() {
   return (
-    <AppProvider>
-      <AppContent />
-    </AppProvider>
+    <ThemeProvider>
+      <AppProvider>
+        <AppContent />
+      </AppProvider>
+    </ThemeProvider>
   );
 }
 

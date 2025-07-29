@@ -265,7 +265,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, total }) =
             <button
               type="submit"
               disabled={isProcessing}
-              className="w-full mt-6 bg-green-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="payment-button w-full mt-6 bg-green-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isProcessing ? 'Traitement en cours...' : 'Payer maintenant'}
             </button>
