@@ -10,7 +10,13 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "init-db": "node scripts/initDb.js"
+    "init-db": "node scripts/initDb.js",
+    "check-admin": "node scripts/checkAdmin.js",
+    "reset-admin": "node scripts/resetAdminPassword.js",
+    "view-products": "node scripts/viewProducts.js",
+    "view-users": "node scripts/viewUsers.js",
+    "test-vercel": "node scripts/testVercelConnection.js",
+    "test-vercel-auth": "node scripts/testVercelAuth.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
