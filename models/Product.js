@@ -119,7 +119,8 @@ const productSchema = new mongoose.Schema({
     default: true
   }
 }, { 
-  timestamps: true 
+  timestamps: true,
+  suppressReservedKeysWarning: true
 });
 
 // Middleware pour calculer automatiquement les propriétés
