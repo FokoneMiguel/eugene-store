@@ -1,17 +1,6 @@
-import mongoose from 'mongoose';
+import connectDB from '../config/database.js';
+import User from '../models/User.js';
 import bcrypt from 'bcrypt';
-
-const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    return conn;
-  } catch (error) {
-    throw new Error(`Erreur de connexion MongoDB: ${error.message}`);
-  }
-};
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -22,33 +11,29 @@ export default async function handler(req, res) {
     console.log('🔄 Initialisation de la base de données...');
     
     // Connexion à MongoDB
-    const conn = await connectDB();
-    console.log(`✅ MongoDB connecté: ${conn.connection.host}`);
+    await connectDB();
+    console.log('✅ MongoDB connecté');
 
     // Créer l'utilisateur admin
     const hashedPassword = await bcrypt.hash('password', 10);
     
     // Supprimer l'admin existant s'il existe
-    await conn.connection.db.collection('users').deleteOne({ email: 'admin@eugenestore.cm' });
+    await User.deleteOne({ email: 'admin@eugenestore.cm' });
     
     // Créer le nouvel admin
-    await conn.connection.db.collection('users').insertOne({
+    const admin = new User({
       email: 'admin@eugenestore.cm',
       password: hashedPassword,
       firstName: 'Admin',
       lastName: 'Eugene',
       phone: '+237 123456789',
-      role: 'admin',
-      isVerified: true,
-      createdAt: new Date(),
-      updatedAt: new Date()
+      role: 'admin'
     });
+    await admin.save();
     
     console.log('✅ Utilisateur admin créé');
 
-    // Fermer la connexion
-    await mongoose.connection.close();
-    console.log('🔌 Connexion fermée');
+    console.log('✅ Admin créé avec succès');
 
     res.status(200).json({
       success: true,
